@@ -29,8 +29,12 @@
   },
   "typesVersions": {
     "*": {
-      "serialization": ["./dist/serialization/index.d.ts"],
-      "legacy": ["./dist/legacy/index.d.ts"]
+      "serialization": [
+        "./dist/serialization/index.d.ts"
+      ],
+      "legacy": [
+        "./dist/legacy/index.d.ts"
+      ]
     }
   },
   "author": {
@@ -48,8 +52,11 @@
   "scripts": {
     "test": "vitest",
     "docs": "bunx documentation build \"src/core/**/*.ts\" -f md -o docs/API.md",
-    "build": "bun build:core && bun build:serialization && bun build:legacy && bun build:types",
+    "build": "bun build:core && bun build:serialization && bun build:legacy && bun build:types && bun build:es5",
     "build:types": "tsc",
+    "build:es5": "bun build:core:es5 && bun build:core:es5:nonmin",
+    "build:core:es5": "npx tsc -p tsconfig.es5.json && esbuild dist/es5/core/index.js --bundle --minify --sourcemap --format=iife --global-name=bitecs --outfile=dist/index.es5.js",
+    "build:core:es5:nonmin": "npx tsc -p tsconfig.es5.json && esbuild dist/es5/core/index.js --bundle --sourcemap --format=iife --global-name=bitecs --outfile=dist/index.es5.nonmin.js",
     "build:core": "bun build:core:mjs && bun build:core:cjs && bun build:core:mjs:nonmin && bun build:core:cjs:nonmin",
     "build:core:mjs": "esbuild src/core/index.ts --bundle --minify --sourcemap --format=esm --outfile=dist/core/index.min.mjs",
     "build:core:cjs": "esbuild src/core/index.ts --bundle --minify --sourcemap --format=cjs --outfile=dist/core/index.min.cjs",
@@ -73,6 +80,7 @@
   },
   "devDependencies": {
     "esbuild": "^0.23.1",
+    "typescript": "^5.9.2",
     "vitest": "^2.0.5"
   }
 }
